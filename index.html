@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Belajar Visualisasi Data Kelas 9</title>
+ 
+<style>
+/* =====================================================
+   1. WARNA & PENGATURAN DASAR
+   (ubah warna cukup di bagian variabel ini)
+   ===================================================== */
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+ 
+  --bg:   #fff8ec;   /* latar halaman   */
+  --card: #ffffff;   /* latar kartu     */
+  --ink:  #1f2a44;   /* warna teks      */
+  --mute: #5b6478;   /* teks pudar      */
+  --p:    #5b4bdb;   /* ungu utama      */
+  --p2:   #ff7a59;   /* oranye          */
+  --y:    #ffc83d;   /* kuning          */
+  --g:    #22b07d;   /* hijau           */
+  --b:    #e6dcc8;   /* garis tepi      */
+}
+ 
+/* Mode gelap otomatis (mengikuti pengaturan perangkat) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151a2e;  --card: #1f2640;  --ink: #f2f4ff;  --mute: #aab2cf;
+    --p: #9a8cff;   --p2: #ff8f70;    --y: #ffd166;    --g: #3ed3a0;   --b: #343d63;
+  }
+}
+/* Mode gelap manual: <html data-theme="dark"> */
+:root[data-theme="dark"] {
+  --bg: #151a2e;  --card: #1f2640;  --ink: #f2f4ff;  --mute: #aab2cf;
+  --p: #9a8cff;   --p2: #ff8f70;    --y: #ffd166;    --g: #3ed3a0;   --b: #343d63;
+}
+ 
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *:before, *:after { box-sizing: border-box; }
+ 
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.55;
+}
+ 
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px 16px 60px;
+}
+ 
+h2   { font-size: 1.6rem; margin: 0 0 4px; }
+.sub { color: var(--mute); margin: 0 0 16px; }
+.big { font-size: 2rem; }
+ 
+/* Tiap halaman (section) disembunyikan, kecuali yang aktif */
+section    { display: none; }
+section.on { display: block; }
+ 
+ 
+/* =====================================================
+   2. HEADER & MENU NAVIGASI
+   ===================================================== */
+header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--card);
+  border-bottom: 2px solid var(--b);
+}
+.bar {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.logo { font-weight: 900; font-size: 1.25rem; color: var(--p); }
+ 
+nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+}
+nav button {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+nav button.on { background: var(--p); color: #fff; }
+ 
+ 
+/* =====================================================
+   3. KOMPONEN UMUM (tombol, kartu, badge, dll.)
+   ===================================================== */
+.btn {
+  display: inline-block;
+  border: 0;
+  background: var(--y);
+  color: #1f2a44;
+  font: inherit;
+  font-weight: 900;
+  padding: 11px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn.alt  { background: var(--p); color: #fff; }
+.card .btn { margin-top: 10px; }
+ 
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 20px;
+}
+.card {
+  background: var(--card);
+  border: 2px solid var(--b);
+  border-radius: 20px;
+  padding: 18px;
+}
+.card h3  { margin: 0 0 6px; }
+.card ol  { margin: 0; padding-left: 22px; }
+ 
+.badge {
+  background: var(--y);
+  color: #1f2a44;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-weight: 900;
+  font-size: .8rem;
+}
+ 
+/* Kotak tips (hijau) */
+.tip {
+  background: var(--card);
+  border-left: 6px solid var(--g);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-top: 16px;
+}
+ 
+/* Kotak pengumuman (kuning) */
+.note {
+  background: #fff3cd;
+  color: #5a4300;
+  border: 2px solid var(--y);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 0 0 10px;
+  font-size: .95rem;
+}
+.note a { color: #b3470f; font-weight: 900; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .note   { background: #3a3213; color: #ffe9a8; }
+  :root:not([data-theme="light"]) .note a { color: #ffd166; }
+}
+ 
+/* Tombol "Kembali ke Beranda" */
+.back     { margin: 0 0 14px; }
+.back.bot { margin: 20px 0 0; }
+ 
+ 
+/* =====================================================
+   4. BERANDA
+   ===================================================== */
+.hero {
+  background: linear-gradient(135deg, var(--p), #8a5cf6);
+  color: #fff;
+  border-radius: 24px;
+  padding: 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  line-height: 1.15;
+}
+.hero p {
+  max-width: 560px;
+  font-size: 1.05rem;
+  margin: 0 0 18px;
+}
+.emo {
+  position: absolute;
+  right: 16px;
+  bottom: 6px;
+  font-size: 5rem;
+  opacity: .25;
+}
+ 
+ 
+/* =====================================================
+   5. KELOMPOK
+   ===================================================== */
+.gh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.g7 { border-color: var(--p2); }   /* kartu kelompok yang anggotanya 7 orang */
+ 
+ 
+/* =====================================================
+   6. MATERI (video, PDF, infografis) & LEMBAR KERJA
+   ===================================================== */
+.frame {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  background: #0002;
+}
+.ph {   /* kotak placeholder jika link belum diisi */
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  border: 2px dashed var(--b);
+  border-radius: 14px;
+  color: var(--mute);
+  font-size: .9rem;
+}
+ 
+/* Video: 3 kolom di desktop, 1 kolom di HP. Nearpod selalu selebar penuh. */
+#videos     { grid-template-columns: repeat(3, 1fr); }
+#videos .np { grid-column: 1 / -1; }
+@media (max-width: 800px) { #videos { grid-template-columns: 1fr; } }
+ 
+/* Gambar kuis (Zep Quiz tidak bisa di-embed, jadi diganti gambar) */
+.qimg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 2px solid var(--b);
+  background: #0002;
+}
+ 
+/* Tab pilihan kelompok di Lembar Kerja */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.tabs button {
+  border: 2px solid var(--b);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.tabs button.on { background: var(--p2); border-color: var(--p2); color: #fff; }
+.sheet { height: 70vh; min-height: 420px; }
+ 
+/* Gambar sampul kuis */
+.quizimg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #0001;
+  border-radius: 14px;
+}
+ 
+/* Kotak link (salin & buka) */
+.lb {
+  margin-top: 14px;
+  background: var(--bg);
+  border: 2px dashed var(--b);
+  border-radius: 14px;
+  padding: 12px;
+}
+.lr { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.lr input {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--b);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: .9rem;
+}
+.lr .btn { margin: 0; padding: 9px 16px; }
+ 
+ 
+/* =====================================================
+   7. FOOTER
+   ===================================================== */
+footer {
+  margin-top: 30px;
+  background: linear-gradient(135deg, #2b2370, #5b4bdb);
+  color: #fff;
+  border-radius: 28px 28px 0 0;
+  padding: 34px 20px 20px;
+}
+.fw {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 2fr 1fr 1fr;
+}
+.fw h4  { margin: 0 0 10px; color: var(--y); }
+.fw p   { margin: 0; opacity: .9; font-size: .95rem; }
+.fw .fb { font-size: 1.4rem; font-weight: 900; margin-bottom: 8px; }
+.fw a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  opacity: .9;
+  padding: 3px 0;
+  cursor: pointer;
+}
+.fw a:hover { color: var(--y); opacity: 1; }
+.fcopy {
+  max-width: 1000px;
+  margin: 24px auto 0;
+  padding-top: 14px;
+  border-top: 1px solid #ffffff44;
+  text-align: center;
+  font-size: .85rem;
+  opacity: .85;
+}
+@media (max-width: 640px) { .fw { grid-template-columns: 1fr; } }
+</style>
+</head>
+ 
+<body>
+ 
+<!-- =====================================================
+     HEADER (menu diisi otomatis oleh JavaScript)
+     ===================================================== -->
+<header>
+  <div class="bar">
+    <div class="logo">📊 DataSeru!</div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+ 
+<main>
+ 
+  <!-- ============ BERANDA ============ -->
+  <section id="beranda" class="on">
+    <div class="hero">
+      <h1>Ubah angka jadi cerita yang keren! 🚀</h1>
+      <p>
+        Kamu bukan sekadar membaca data. Kamu akan jadi <b>detektif data</b>
+        yang mengubah deretan angka menjadi grafik yang membuat semua orang
+        bilang “Wah, ngerti banget!”
+      </p>
+      <button class="btn" onclick="go('kelompok')">Cari kelompokmu →</button>
+      <div class="emo">📈</div>
+    </div>
+ 
+    <div class="grid">
+      <div class="card">
+        <div class="big">🎬</div>
+        <h3>Tonton</h3>
+        <p>Video seru untuk memahami dasar visualisasi data.</p>
+        <button class="btn" onclick="go('materi')">Ke Materi Belajar →</button>
+      </div>
+      <div class="card">
+        <div class="big">🧩</div>
+        <h3>Kerjakan</h3>
+        <p>Bersama kelompok, olah data di lembar kerja.</p>
+        <button class="btn" onclick="go('lembar')">Ke Lembar Kerja →</button>
+      </div>
+      <div class="card">
+        <div class="big">🏆</div>
+        <h3>Taklukkan</h3>
+        <p>Uji kemampuanmu lewat kuis dan kumpulkan skor terbaik!</p>
+        <button class="btn" onclick="go('latihan')">Ke Latihan Soal →</button>
+      </div>
+    </div>
+ 
+    <div class="tip">
+      💡 <b>Ingat:</b> Setiap ahli data pernah salah baca grafik.
+      Berani mencoba adalah langkah pertamamu!
+    </div>
+  </section>
+ 
+  <!-- ============ KELOMPOK ============ -->
+  <section id="kelompok">
+    <h2>👥 Pembagian Kelompok</h2>
+    <p class="sub">Temukan namamu, lalu berkumpul dengan timmu. Kompak itu kunci! 💪</p>
+    <div class="grid" id="groups"></div>
+  </section>
+ 
+  <!-- ============ MATERI ============ -->
+  <section id="materi">
+    <h2>📚 Materi Belajar</h2>
+    <p class="sub">
+      Semua bahan belajarmu ada di sini: video, file materi, dan infografis.
+      Pelajari sesuai urutan atau loncat ke bagian favoritmu!
+    </p>
+ 
+    <h3 style="margin:8px 0 10px">🎬 Video Belajar</h3>
+    <div class="grid" id="videos"></div>
+ 
+    <h3 style="margin:30px 0 10px">📄 File Materi (PDF)</h3>
+    <div class="grid" id="pdfs" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+ 
+    <h3 style="margin:30px 0 10px">🎨 Infografis</h3>
+    <div class="grid" id="infos" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+  </section>
+ 
+  <!-- ============ LEMBAR KERJA ============ -->
+  <section id="lembar">
+    <h2>🧩 Lembar Kerja</h2>
+    <p class="sub">Pilih lembar kerja sesuai kelompokmu, lalu isi bersama-sama.</p>
+    <div class="tabs" id="wtabs"></div>
+    <div class="card" id="wbox"></div>
+  </section>
+ 
+  <!-- ============ LATIHAN SOAL ============ -->
+  <section id="latihan">
+    <h2>🏆 Latihan Soal</h2>
+    <p class="sub">Siap uji kemampuan? Jawab dengan teliti dan raih skor tertinggi!</p>
+    <div class="grid" id="quizzes" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+  </section>
+ 
+</main>
+ 
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+<footer>
+  <div class="fw">
+    <div>
+      <div class="fb">📊 DataSeru!</div>
+      <p>
+        Belajar visualisasi data jadi seru, mudah, dan penuh semangat.
+        Setiap angka punya cerita, dan kamu yang akan menceritakannya!
+      </p>
+    </div>
+    <div>
+      <h4>Menu</h4>
+      <a onclick="go('beranda')">🏠 Beranda</a>
+      <a onclick="go('kelompok')">👥 Kelompok</a>
+      <a onclick="go('materi')">📚 Materi</a>
+    </div>
+    <div>
+      <h4>Belajar</h4>
+      <a onclick="go('lembar')">🧩 Lembar Kerja</a>
+      <a onclick="go('latihan')">🏆 Latihan Soal</a>
+      <a onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️ Ke atas</a>
+    </div>
+  </div>
+  <div class="fcopy">Semangat belajar, calon ahli data masa depan! ✨ · Kelas 9 · Informatika</div>
+</footer>
+ 
+ 
+<script>
+/* =====================================================
+   A. PENGATURAN  ← CUKUP UBAH BAGIAN INI
+   ===================================================== */
+var CFG = {
+ 
+  /* ---------- VIDEO ----------
+     type : "Nearpod" atau "YouTube"
+     src  : link embed.
+            Nearpod  → https://app.nearpod.com/?pin=KODE&he=true
+            YouTube  → https://www.youtube.com/embed/KODE_VIDEO */
+  videos: [
+    { type: "Nearpod", t: "Nearpod 1: Pengenalan Analisis Data",
+      src: "https://app.nearpod.com/?pin=YFSZJ&he=true" },
+ 
+    { type: "Nearpod", t: "Nearpod 2: Langkah-Langkah Analisis",
+      src: "https://app.nearpod.com/?pin=HBUYX&he=true" },
+ 
+    { type: "YouTube", t: "YouTube 1: Jenis-Jenis Diagram",
+      src: "https://www.youtube.com/embed/Sij0cS-D8KY" },
+ 
+    { type: "YouTube", t: "YouTube 2: Mengenal Bagian-Bagian Spreadsheet",
+      src: "https://www.youtube.com/embed/89ETjJ2xFwU" },
+ 
+    { type: "YouTube", t: "YouTube 3: Praktik Membuat Diagram",
+      src: "https://www.youtube.com/embed/l8Yus9_OdWE" }
+  ],
+ 
+  /* ---------- FILE MATERI (PDF) ----------
+     Disarankan link Google Drive berakhiran /preview */
+  pdfs: [
+    { t: "Materi 1: Pengantar Visualisasi Data",
+      url: "https://drive.google.com/file/d/1oMe2hfra4a2EoOL5qwQf0G-NHpEaIWck/preview" },
+ 
+    { t: "Materi 2: Jenis-Jenis Grafik",
+      url: "https://drive.google.com/file/d/15TT40Jr7EWfGCWwhDYa29PtdvRqXmKzK/preview" }
+  ],
+ 
+  /* ---------- INFOGRAFIS ----------
+     Disarankan link embed Canva atau Google Drive /preview */
+  infos: [
+    { t: "Infografis 1",
+      url: "https://drive.google.com/file/d/1abH2CBX2-K4B_KP2Tato5dw4A88jtxDK/preview" },
+ 
+    { t: "Infografis 2",
+      url: "https://drive.google.com/file/d/1YqxaUIEG1tdhP7JHNHY5mdJacBwAU6Rk/preview" },
+ 
+    { t: "Infografis 3",
+      url: "https://drive.google.com/file/d/1c7G1RuARt0c3ISDiBa80u3vZwrt-PykN/preview" },
+ 
+    { t: "Infografis 4",
+      url: "https://drive.google.com/file/d/1fISOjSB5sd4cVaUTWmI2L2LY7sDMPznS/preview" }
+  ],
+ 
+  /* ---------- KELOMPOK ----------
+     sizes   : jumlah anggota tiap kelompok (urut dari Kelompok 1 sampai 7)
+     names   : nama siswa. Format "nomorKelompok-nomorUrut": "Nama"
+               Contoh: names: { "1-1": "Budi", "1-2": "Sinta" }
+               Jika kosong, otomatis tampil "Siswa 1", "Siswa 2", dst. */
+  sizes: [4, 4, 5, 5, 5, 4, 7],
+  names: {
+    // Kelompok 1 
+        "1-1": "Chelsea",
+        "1-2": "Kannaya Sybilla",
+        "1-3": "Aditya",
+        "1-4": "Farhan",
+    // Kelompok 2 
+        "2-1": "Nikela",
+        "2-2": "Kesya",
+        "2-3": "Radithya",
+        "2-4": "Arjuna",
+    // Kelompok 3 
+        "3-1": "Adel",
+        "3-2": "Jehan",
+        "3-3": "Putra",
+        "3-4": "Alfin",
+        "3-5": "Faqih", 
+    // Kelompok 4 
+        "4-1": "Dinda",
+        "4-2": "Evelyn",
+        "4-3": "Andhika",
+        "4-4": "Jaisal",
+        "4-5": "Rakha",
+    // Kelompok 5 
+        "5-1": "Olivia",
+        "5-2": "Intan",
+        "5-3": "Vino",
+        "5-4": "Anam",
+    // Kelompok 6 
+        "6-1": "Kanaya Putri",
+        "6-2": "Fildzah",
+        "6-3": "Aidzil",
+        "6-4": "Vano", 
+    // Kelompok 6 
+        "7-1": "Lazar",
+        "7-2": "Amanta",
+        "7-3": "Aria",
+        "7-4": "Ferdi",   
+        "7-5": "Sabil", 
+        "7-6": "Farez", 
+        "7-7": "Aflah",     
+    },
+ 
+  /* ---------- LEMBAR KERJA ----------
+     sheetOf : nomor lembar kerja tiap kelompok.
+               Sekarang setiap kelompok punya lembar sendiri (1 sampai 7).
+     sheets  : link Google Spreadsheet, urut Lembar 1 sampai 7.
+               Akhiri link dengan /edit atau /pubhtml. Kosongkan jika belum ada. */
+  sheetOf: [1, 2, 3, 4, 5, 6, 7],
+  sheets: [
+    "https://docs.google.com/spreadsheets/d/1yOlqKItpN0L0Y1jGf7hE76nNRa2zOFhJdy4uBhXblLg/edit?usp=sharing/edit",   // Lembar 1 (Kelompok 1)
+    "https://docs.google.com/spreadsheets/d/1w_OckVfmePMLjRjs4tLNO0zWGWPo1CEYSPLLepjtR6M/edit?usp=sharing/edit",   // Lembar 2 (Kelompok 2)
+    "https://docs.google.com/spreadsheets/d/1oRHldXPVkjSX76HupjO3HvqGKxQL5QZ-GzIAF_ROkNc/edit?usp=sharing/edit",   // Lembar 3 (Kelompok 3)
+    "https://docs.google.com/spreadsheets/d/1Nuo3iAguEdTauo-Y6sFJXxVnZWtoSSsGSkRAeRn0ecc/edit?usp=sharing/edit",   // Lembar 4 (Kelompok 4)
+    "https://docs.google.com/spreadsheets/d/17wsgkMaPc7BY_tnwqj1I-J60a-h0UuyzVWv8KEC-DTQ/edit?usp=sharing/edit",   // Lembar 5 (Kelompok 5)
+    "https://docs.google.com/spreadsheets/d/1XxtB7d428xEUfubuueDHm5e46CftgayNU8yIRF_c4co/edit?usp=sharing/edit",   // Lembar 6 (Kelompok 6)
+    "https://docs.google.com/spreadsheets/d/1pqHouWOzY1iAp2YXmzWpOI9Fhd0Owg9KNGLTZEUmq48/edit?usp=sharing/edit"    // Lembar 7 (Kelompok 7)
+  ],
+ 
+  /* ---------- KUIS (Zep Quiz) ----------
+     Zep Quiz tidak bisa di-embed, jadi kotak kuis berisi GAMBAR,
+     sedangkan link kuis hanya muncul di kotak "Link kuis".
+     img : gambar sampul kuis. Boleh berupa:
+           - link gambar langsung (.png / .jpg / .webp)
+           - link berbagi Google Drive (otomatis diubah jadi gambar)
+           - nama file di folder yang sama, misalnya "kuis1.png"
+     url : link Zep Quiz */
+  quizzes: [
+    { t: "Kuis 1: Pengantar Analisis Data",
+      img: "assets/kuis1-gambar.png",
+      url: "https://quiz.zep.us/en/play/033aGk" },
+ 
+    { t: "Kuis 2: Langkah Analisis Data",
+      img: "assets/kuis2-gambar.png",
+      url: "https://quiz.zep.us/en/play/KRR1xm" }
+  ]
+};
+ 
+ 
+/* =====================================================
+   B. FUNGSI BANTU
+   ===================================================== */
+var $ = function (id) { return document.getElementById(id); };
+ 
+/* Izin iframe untuk Nearpod & YouTube */
+var IFRAME_ALLOW =
+  "accelerometer *; ambient-light-sensor *; autoplay *; camera *; " +
+  "clipboard-read *; clipboard-write *; encrypted-media *; fullscreen *; " +
+  "geolocation *; gyroscope *; magnetometer *; microphone *; midi *; " +
+  "payment *; picture-in-picture *; screen-wake-lock *; speaker *; " +
+  "sync-xhr *; usb *; web-share *; vibrate *; vr *";
+ 
+/* Kotak link dengan tombol Salin & Buka */
+function linkBox(url, label) {
+  var buttons = url
+    ? '<button class="btn alt" onclick="cp(this)">Salin</button>' +
+      '<a class="btn" href="' + url + '" target="_blank" rel="noopener">Buka ↗</a>'
+    : '';
+ 
+  return '<div class="lb">' +
+           '<b>🔗 ' + label + '</b>' +
+           '<div class="lr">' +
+             '<input readonly value="' + (url || '') + '" placeholder="Link belum diisi" onclick="this.select()">' +
+             buttons +
+           '</div>' +
+         '</div>';
+}
+ 
+/* Ubah link berbagi Google Drive menjadi link gambar yang bisa ditampilkan */
+function imgUrl(u) {
+  var m = u && u.match(/drive\.google\.com\/file\/d\/([^\/?]+)/);
+  return m ? "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1200" : u;
+}
+ 
+/* Tombol "Salin" */
+function cp(btn) {
+  var input = btn.parentNode.querySelector("input");
+  var oldText = btn.textContent;
+  try { navigator.clipboard.writeText(input.value); }
+  catch (e) { input.select(); }
+  btn.textContent = "Tersalin ✓";
+  setTimeout(function () { btn.textContent = oldText; }, 1500);
+}
+ 
+ 
+/* =====================================================
+   C. NAVIGASI ANTAR HALAMAN
+   ===================================================== */
+var secs = [
+  ["beranda", "🏠 Beranda"],
+  ["kelompok", "👥 Kelompok"],
+  ["materi", "📚 Materi"],
+  ["lembar", "🧩 Lembar Kerja"],
+  ["latihan", "🏆 Latihan Soal"]
+];
+ 
+/* Buat tombol menu di header */
+$("nav").innerHTML = secs.map(function (s) {
+  return '<button data-s="' + s[0] + '" onclick="go(\'' + s[0] + '\')">' + s[1] + '</button>';
+}).join("");
+ 
+/* Pindah halaman */
+function go(id) {
+  secs.forEach(function (s) { $(s[0]).classList.toggle("on", s[0] === id); });
+  document.querySelectorAll("nav button").forEach(function (b) {
+    b.classList.toggle("on", b.dataset.s === id);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+ 
+/* Tambahkan tombol "Kembali ke Beranda" di bawah tiap halaman */
+["kelompok", "materi", "lembar", "latihan"].forEach(function (id) {
+  var b = document.createElement("button");
+  b.className = "btn alt back bot";
+  b.textContent = "\u2190 Kembali ke Beranda";
+  b.onclick = function () { go("beranda"); };
+  $(id).appendChild(b);
+});
+ 
+go("beranda");
+ 
+ 
+/* =====================================================
+   D. KELOMPOK
+   ===================================================== */
+var icons = ["🦊", "🐬", "🦉", "🐯", "🦄", "🐼", "🚀"];
+ 
+$("groups").innerHTML = CFG.sizes.map(function (n, i) {
+  var list = "";
+  for (var k = 1; k <= n; k++) {
+    var name = CFG.names[(i + 1) + "-" + k] || "Siswa " + k;
+    list += "<li>" + name + "</li>";
+  }
+ 
+  return '<div class="card' + (n === 7 ? ' g7' : '') + '">' +
+           '<div class="gh"><h3>' + icons[i] + ' Kelompok ' + (i + 1) + '</h3></div>' +
+           '<ol>' + list + '</ol>' +
+           '<p class="sub" style="margin:10px 0 0">Lembar Kerja ' + CFG.sheetOf[i] + '</p>' +
+         '</div>';
+}).join("");
+ 
+ 
+/* =====================================================
+   E. VIDEO (Nearpod & YouTube)
+   ===================================================== */
+$("videos").innerHTML = CFG.videos.map(function (v) {
+  var isNearpod = (v.type === "Nearpod");
+ 
+  /* Pengumuman khusus Nearpod (untuk pengguna HP) */
+  var note = "";
+  if (isNearpod) {
+    note = '<div class="note">' +
+             '📱 <b>Mengakses lewat HP?</b> Nearpod tidak bisa tampil langsung di HP. ' +
+             'Silakan klik <b>“Buka di tab baru ↗”</b>' +
+             (v.src ? ' (<a href="' + v.src + '" target="_blank" rel="noopener">klik di sini</a>)' : '') +
+             ' di bawah pelajaran ini. Di laptop/komputer, Nearpod bisa langsung dimainkan di sini.' +
+           '</div>';
+  }
+ 
+  /* Pemutar video (iframe) atau placeholder jika link kosong */
+  var player;
+  if (v.src) {
+    var style = isNearpod
+      ? "aspect-ratio:1024/832;max-width:1024px;display:block;margin:0 auto"
+      : "";
+    player = '<iframe class="frame" style="' + style + '" src="' + v.src + '"' +
+             ' allowfullscreen allow="' + IFRAME_ALLOW + '"' +
+             ' loading="lazy" title="' + v.t + '"></iframe>';
+  } else {
+    player = '<div class="ph">Tempel link video di bagian PENGATURAN</div>';
+  }
+ 
+  /* Tautan "Buka di tab baru" */
+  var openLink = v.src
+    ? '<a href="' + v.src + '" target="_blank" rel="noopener">Buka di tab baru ↗</a>'
+    : '<span style="color:var(--mute)">Buka di tab baru ↗ (link belum diisi)</span>';
+ 
+  return '<div class="card' + (isNearpod ? ' np' : '') + '">' +
+           '<span class="badge">' + v.type + '</span>' +
+           '<h3 style="margin:8px 0">' + v.t + '</h3>' +
+           note +
+           player +
+           '<p style="margin:8px 0 0">' + openLink + '</p>' +
+         '</div>';
+}).join("");
+ 
+ 
+/* =====================================================
+   F. PDF & INFOGRAFIS
+   ===================================================== */
+function renderFiles(list, badge, icon, linkLabel, placeholder) {
+  return list.map(function (p) {
+    var preview = p.url
+      ? '<iframe class="frame" style="aspect-ratio:4/3" src="' + p.url + '" loading="lazy" title="' + p.t + '"></iframe>'
+      : '<div class="ph" style="aspect-ratio:4/3">' + placeholder + '</div>';
+ 
+    return '<div class="card">' +
+             '<span class="badge">' + icon + ' ' + badge + '</span>' +
+             '<h3 style="margin:8px 0">' + p.t + '</h3>' +
+             preview +
+             linkBox(p.url, linkLabel) +
+           '</div>';
+  }).join("");
+}
+ 
+$("pdfs").innerHTML  = renderFiles(CFG.pdfs,  "PDF",        "📄", "Link file PDF",    "Tempel link PDF di bagian PENGATURAN");
+$("infos").innerHTML = renderFiles(CFG.infos, "Infografis", "🎨", "Link infografis",  "Tempel link infografis di bagian PENGATURAN");
+ 
+ 
+/* =====================================================
+   G. LEMBAR KERJA
+   ===================================================== */
+function showSheet(i) {
+  /* tandai tab yang aktif */
+  document.querySelectorAll("#wtabs button").forEach(function (b, k) {
+    b.classList.toggle("on", k === i);
+  });
+ 
+  var no  = CFG.sheetOf[i];        // nomor lembar kerja kelompok ini
+  var url = CFG.sheets[no - 1];    // link spreadsheet-nya
+ 
+  var view = url
+    ? '<iframe class="frame sheet" src="' + url + '" title="Spreadsheet kelompok ' + (i + 1) + '" style="margin-top:8px"></iframe>'
+    : '<div class="ph sheet" style="margin-top:8px">Tempel link Google Spreadsheet Lembar ' + no + ' di bagian PENGATURAN</div>';
+ 
+  $("wbox").innerHTML =
+    '<h3>Kelompok ' + (i + 1) + ' <span class="badge">Lembar Kerja ' + no + '</span></h3>' +
+    '<b>📄 Tampilan spreadsheet</b>' +
+    view +
+    linkBox(url, "Link spreadsheet");
+}
+ 
+/* Buat tab "Kelompok 1 ... Kelompok 7" */
+$("wtabs").innerHTML = CFG.sheetOf.map(function (_, i) {
+  return '<button onclick="showSheet(' + i + ')">Kelompok ' + (i + 1) + '</button>';
+}).join("");
+ 
+showSheet(0);
+ 
+ 
+/* =====================================================
+   H. KUIS
+   ===================================================== */
+$("quizzes").innerHTML = CFG.quizzes.map(function (q, i) {
+  var body = q.img
+    ? '<img class="quizimg" src="' + imgUrl(q.img) + '" alt="' + q.t + '" loading="lazy">'
+    : '<div class="ph">Tempel link gambar kuis di bagian PENGATURAN</div>';
+ 
+  return '<div class="card">' +
+           '<div class="big">' + (i ? "🎯" : "⭐") + '</div>' +
+           '<h3>' + q.t + '</h3>' +
+           body +
+           linkBox(q.url, "Link kuis") +
+         '</div>';
+}).join("");
+</script>
+ 
+</body>
+</html>
