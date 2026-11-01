@@ -528,7 +528,7 @@ var CFG = {
      names   : nama siswa. Format "nomorKelompok-nomorUrut": "Nama"
                Contoh: names: { "1-1": "Budi", "1-2": "Sinta" }
                Jika kosong, otomatis tampil "Siswa 1", "Siswa 2", dst. */
-  sizes: [4, 4, 5, 5, 5, 4, 7],
+  sizes: [4, 4, 5, 5, 5, 4, 4,4],
   names: {
     // Kelompok 1 
         "1-1": "Chelsea",
@@ -562,14 +562,16 @@ var CFG = {
         "6-2": "Fildzah",
         "6-3": "Aidzil",
         "6-4": "Vano", 
-    // Kelompok 6 
+    // Kelompok 7 
         "7-1": "Lazar",
         "7-2": "Amanta",
         "7-3": "Aria",
-        "7-4": "Ferdi",   
-        "7-5": "Sabil", 
-        "7-6": "Farez", 
-        "7-7": "Aflah",     
+        "7-4": "Ferdi",      
+    // Kelompok 8   
+        "8-1": "Sabil", 
+        "8-2": "Farez", 
+        "8-3": "Aflah",
+        "8-4": "Bima",      
     },
  
   /* ---------- LEMBAR KERJA ----------
@@ -577,7 +579,7 @@ var CFG = {
                Sekarang setiap kelompok punya lembar sendiri (1 sampai 7).
      sheets  : link Google Spreadsheet, urut Lembar 1 sampai 7.
                Akhiri link dengan /edit atau /pubhtml. Kosongkan jika belum ada. */
-  sheetOf: [1, 2, 3, 4, 5, 6, 7],
+  sheetOf: [1, 2, 3, 4, 5, 6, 7,8],
   sheets: [
     "https://docs.google.com/spreadsheets/d/1yOlqKItpN0L0Y1jGf7hE76nNRa2zOFhJdy4uBhXblLg/edit?usp=sharing/edit",   // Lembar 1 (Kelompok 1)
     "https://docs.google.com/spreadsheets/d/1w_OckVfmePMLjRjs4tLNO0zWGWPo1CEYSPLLepjtR6M/edit?usp=sharing/edit",   // Lembar 2 (Kelompok 2)
@@ -585,7 +587,8 @@ var CFG = {
     "https://docs.google.com/spreadsheets/d/1Nuo3iAguEdTauo-Y6sFJXxVnZWtoSSsGSkRAeRn0ecc/edit?usp=sharing/edit",   // Lembar 4 (Kelompok 4)
     "https://docs.google.com/spreadsheets/d/17wsgkMaPc7BY_tnwqj1I-J60a-h0UuyzVWv8KEC-DTQ/edit?usp=sharing/edit",   // Lembar 5 (Kelompok 5)
     "https://docs.google.com/spreadsheets/d/1XxtB7d428xEUfubuueDHm5e46CftgayNU8yIRF_c4co/edit?usp=sharing/edit",   // Lembar 6 (Kelompok 6)
-    "https://docs.google.com/spreadsheets/d/1pqHouWOzY1iAp2YXmzWpOI9Fhd0Owg9KNGLTZEUmq48/edit?usp=sharing/edit"    // Lembar 7 (Kelompok 7)
+    "https://docs.google.com/spreadsheets/d/1pqHouWOzY1iAp2YXmzWpOI9Fhd0Owg9KNGLTZEUmq48/edit?usp=sharing/edit",    // Lembar 7 (Kelompok 7)
+    "https://docs.google.com/spreadsheets/d/1hO247XB6o6K4p2dUQg85QP6LWjr_3Q3mdkS5qerGZl4/edit?usp=sharing" //lembar kelompok 8
   ],
  
   /* ---------- KUIS (Zep Quiz) ----------
@@ -694,7 +697,7 @@ go("beranda");
 /* =====================================================
    D. KELOMPOK
    ===================================================== */
-var icons = ["🦊", "🐬", "🦉", "🐯", "🦄", "🐼", "🚀"];
+var icons = ["🦊", "🐬", "🦉", "🐯", "🦄", "🐼", "🚀", "🖥️"];
  
 $("groups").innerHTML = CFG.sizes.map(function (n, i) {
   var list = "";
